@@ -1,0 +1,84 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"	
+       xmlns:jee="http://www.springframework.org/schema/jee"
+       xsi:schemaLocation="http://www.springframework.org/schema/mvc 
+						http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+						http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+						http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-4.3.xsd
+						http://www.springframework.org/schema/tx
+        				http://www.springframework.org/schema/tx/spring-tx.xsd
+        				http://www.springframework.org/schema/jee 
+        				http://www.springframework.org/schema/jee/spring-jee.xsd
+                                        http://www.springframework.org/schema/data/jpa
+    http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+    http://www.springframework.org/schema/security/oauth2 				
+                                        http://www.springframework.org/schema/security/spring-security-oauth2.xsd
+                                         http://www.springframework.org/schema/security
+                    http://www.springframework.org/schema/security/spring-security.xsd				
+						">
+ 
+    <!-- ONDE ESTÃO OS COMPONENTES DO SPRING (EX:@Controller, @Repository, @Service e @Component )-->
+    <context:component-scan base-package="br.com.spring.data.rest" />
+        
+    <jpa:repositories base-package="br.com.spring.data.rest.repository" />
+    
+	
+    <!-- SEM ESSA TAG ELE NÃO RETORNA O JSON -->
+    <mvc:annotation-driven />
+	
+    <!-- SEM ESSA TAG NÃO CARREGA OS CSS/JS -->
+    <mvc:default-servlet-handler/>
+    
+    <!-- ESSA TAG É PARA QUE FUNCIONE OS UPLOADS DE ARQUIVOS-->
+    <bean id="multipartResolver"
+          class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize" value="30485760"/>  
+    </bean>
+    
+    <!-- GERENCIAMENTO DO JPA PELO SPRING-->
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">     
+        <property name="persistenceUnitName" value="PERSISTENCE_UNIT" />	     
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <!--<prop key="hibernate.dialect">${hibernate.dialect}</prop>-->
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.archive.autodetection">class,hbm</prop>
+                <prop key="hibernate.use_sql_comments">false</prop>
+                <prop key="hibernate.c3p0.min_size">5</prop>
+                <prop key="hibernate.c3p0.max_size">35</prop>
+                <prop key="hibernate.c3p0.timeout">30000</prop>
+                <prop key="hibernate.c3p0.max_statements">180</prop>
+                <prop key="hibernate.c3p0.idle_test_period">30000</prop>
+            </props>
+        </property>	     
+    </bean>
+ 	  
+    <!-- gerenciamento da transação -->
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
+    </bean> 
+    
+    
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+ 
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix">
+            <value>/WEB-INF/views/</value>
+        </property>
+        <property name="suffix">
+            <value>.jsp</value>
+        </property>
+    </bean>
+</beans>
