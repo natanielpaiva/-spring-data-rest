@@ -10,7 +10,7 @@
     <name>spring-data-rest</name>
 
     <properties>
-        <spring.version>4.2.4.RELEASE</spring.version>
+        <spring.version>5.3.19</spring.version>
         <jackson.version>1.9.13</jackson.version>
         <hibernate.version>5.0.6.Final</hibernate.version>
         <springsecurity.version>4.1.1.RELEASE</springsecurity.version>
